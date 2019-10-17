@@ -24,7 +24,7 @@ int Solution::hasPathSum(TreeNode* A, int B) {
             return 1;
         else if( hasPathSum(root->right,B-sum))
             return 1;
-}
+    }
 
 return 0;
 }
