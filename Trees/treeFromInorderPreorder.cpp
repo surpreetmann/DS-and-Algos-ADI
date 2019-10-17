@@ -1,5 +1,5 @@
 /*
-Given inorder and postorder traversal of a tree, construct the binary tree.
+Given preorder and inorder traversal of a tree, construct the binary tree.
 */
 
 /**
@@ -15,26 +15,25 @@ int search( vector<int> &inorder, int l, int j, int value){
 
 for( int i=l; i<=j; i++ ){
     
-    if( inorder[i] == value)
+    if( value == inorder[i] )
         return i;
 }
+
+//return -1;
 }
 
-TreeNode * createTree( vector<int> &inorder, vector<int> &postorder, int low, int high, int *lastpost ){
+TreeNode* createTree( vector<int> &inorder, vector<int> &preorder, int low, int high, int *lastpos ){
 
 if( low > high )
     return NULL;
-
-TreeNode *node = new TreeNode( postorder[*lastpost] );
---(*lastpost);
-
-if( low == high )
-    return node;
+    
+TreeNode *node = new TreeNode( preorder[*lastpos] );
+++(*lastpos);
 
 int index = search( inorder, low, high, node->val );
 
-node->right = createTree( inorder, postorder, index+1, high, lastpost );
-node->left = createTree( inorder, postorder, low, index-1, lastpost );
+node->left = createTree( inorder, preorder, low, index-1, lastpos );
+node->right = createTree( inorder, preorder, index+1, high, lastpos );
 
 return node;
 }
@@ -44,10 +43,8 @@ TreeNode* Solution::buildTree(vector<int> &A, vector<int> &B) {
 if( A.empty() || B.empty() )
     return NULL;
 
-int postor = B.size()-1;
 int inor = A.size()-1;
+int postor = 0;
 
-TreeNode *root = createTree( A, B, 0, inor, &postor );
-
-return root;
+return createTree( B, A, 0, inor, &postor );
 }
